@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>HealthNest Interactive Quiz</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8f7;
+            margin: 0;
+            text-align: center;
+        }
+
+        header {
+            background-color: #087f78;
+            color: white;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: white;
+            width: 85%;
+            max-width: 500px;
+            margin: 40px auto;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px #ccc;
+        }
+
+        h2 {
+            color: #087f78;
+        }
+
+        .option {
+            display: block;
+            background-color: #e0f2ef;
+            padding: 12px;
+            margin: 10px;
+            border-radius: 6px;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .option:hover {
+            background-color: #b2dfdb;
+        }
+
+        button {
+            background-color: #087f78;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            margin: 15px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #064e49;
+        }
+
+        #result {
+            color: #087f78;
+            font-weight: bold;
+        }
+
+        footer {
+            background-color: #064e49;
+            color: white;
+            padding: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 85%;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>HealthNest</h1>
+        <p>Preventive Healthcare and Diagnostics</p>
+    </header>
+
+    <div class="container">
+
+        <h2>Health Awareness Quiz</h2>
+
+        <p id="number">Question 1</p>
+
+        <h3 id="question"></h3>
+
+        <div id="options"></div>
+
+        <button type="button" id="nextButton" onclick="nextQuestion()">Next</button>
+
+        <p id="result"></p>
+
+        <button type="button" id="restartButton" onclick="restartQuiz()" style="display:none;">
+            Restart Quiz
+        </button>
+
+    </div>
+
+    <footer>
+        <p>2026 HealthNest. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+
+        // Quiz Questions Array 
+        var questions = [
+            {
+                question: "How much water should you drink daily?",
+                options: [
+                    "Very little",
+                    "Enough to stay hydrated",
+                    "No water",
+                    "Only soft drinks"
+                ],
+                answer: 1
+            },
+
+            {
+                question: "Which food is good for health?",
+                options: [
+                    "Junk food",
+                    "Fruits and vegetables",
+                    "Chips",
+                    "Soft drinks"
+                ],
+                answer: 1
+            },
+
+            {
+                question: "Why are health checkups important?",
+                options: [
+                    "To waste time",
+                    "To detect diseases early",
+                    "To avoid exercise",
+                    "No reason"
+                ],
+                answer: 1
+            },
+
+            {
+                question: "How often should you exercise?",
+                options: [
+                    "Never",
+                    "Regularly",
+                    "Once a year",
+                    "Only when sick"
+                ],
+                answer: 1
+            },
+
+            {
+                question: "What helps prevent germs?",
+                options: [
+                    "Washing hands",
+                    "Eating junk food",
+                    "Skipping sleep",
+                    "Avoiding water"
+                ],
+                answer: 0
+            }
+        ];
+
+        var currentQuestion = 0;
+        var score = 0;
+
+        // Display Question 
+        function displayQuestion() {
+
+            var q = questions[currentQuestion];
+
+            document.getElementById("number").textContent =
+                "Question " + (currentQuestion + 1) +
+                " of " + questions.length;
+
+            document.getElementById("question").textContent =
+                q.question;
+
+            var options = document.getElementById("options");
+
+            options.innerHTML = "";
+
+            q.options.forEach(function (option, index) {
+
+                var label = document.createElement("label");
+                var radio = document.createElement("input");
+
+                label.className = "option";
+
+                radio.type = "radio";
+                radio.name = "answer";
+                radio.value = index;
+
+                label.appendChild(radio);
+                label.appendChild(
+                    document.createTextNode(" " + option)
+                );
+
+                options.appendChild(label);
+
+            });
+        }
+
+        // Next Button Function 
+        function nextQuestion() {
+
+            var selected = document.querySelector(
+                'input[name="answer"]:checked'
+            );
+
+            if (selected === null) {
+                alert("Please select an answer!");
+                return;
+            }
+
+            if (Number(selected.value) ===
+                questions[currentQuestion].answer) {
+
+                score++;
+            }
+
+            currentQuestion++;
+
+            if (currentQuestion >= questions.length) {
+                showResult();
+            }
+            else {
+                displayQuestion();
+            }
+        }
+
+        // Display Result 
+        function showResult() {
+
+            document.getElementById("number").textContent =
+                "Quiz Completed";
+
+            document.getElementById("question").textContent =
+                "Your Score: " + score + " / " + questions.length;
+
+            document.getElementById("options").textContent =
+                "Thank you for participating in HealthNest!";
+
+            document.getElementById("result").textContent =
+                "Keep learning about your health!";
+
+            document.getElementById("nextButton").style.display =
+                "none";
+
+            document.getElementById("restartButton").style.display =
+                "inline-block";
+        }
+
+        // Restart Quiz 
+        function restartQuiz() {
+
+            currentQuestion = 0;
+            score = 0;
+
+            document.getElementById("result").textContent = "";
+
+            document.getElementById("nextButton").style.display =
+                "inline-block";
+
+            document.getElementById("restartButton").style.display =
+                "none";
+            displayQuestion();
+        }
+        // Start Quiz 
+        displayQuestion(); 
+    </script>
+</body>
+
+</html>
